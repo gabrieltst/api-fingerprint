@@ -1,4 +1,5 @@
 const request = require('supertest');
+const { expect } = require('chai');
 const app = require('../server');
 
 describe('Testes de Integração - Fluxo Completo da API', () => {
@@ -15,8 +16,8 @@ describe('Testes de Integração - Fluxo Completo da API', () => {
           senha: 'minhaSenhaSegura'
         });
 
-      expect(authResponse.status).toBe(200);
-      expect(authResponse.body).toHaveProperty('token');
+      expect(authResponse.status).to.equal(200);
+      expect(authResponse.body).to.have.property('token');
       
       authToken = authResponse.body.token;
 
@@ -29,17 +30,17 @@ describe('Testes de Integração - Fluxo Completo da API', () => {
           compartilhou_fingerprint: true
         });
 
-      expect(cadastroResponse.status).toBe(201);
-      expect(cadastroResponse.body.data.compartilhou_fingerprint).toBe(true);
+      expect(cadastroResponse.status).to.equal(201);
+      expect(cadastroResponse.body.data.compartilhou_fingerprint).to.equal(true);
 
       // 3. Consultar fingerprint
       const consultaResponse = await request(app)
         .get('/biometria/fingerprint/abc123')
         .set('Authorization', `Bearer ${authToken}`);
 
-      expect(consultaResponse.status).toBe(200);
-      expect(consultaResponse.body.data.compartilhou_fingerprint).toBe(true);
-      expect(consultaResponse.body.data.user_id).toBe('abc123');
+      expect(consultaResponse.status).to.equal(200);
+      expect(consultaResponse.body.data.compartilhou_fingerprint).to.equal(true);
+      expect(consultaResponse.body.data.user_id).to.equal('abc123');
     });
 
     it('deve permitir alterar decisão de compartilhamento', async () => {
@@ -51,7 +52,7 @@ describe('Testes de Integração - Fluxo Completo da API', () => {
           senha: 'outraSenha123'
         });
 
-      expect(authResponse.status).toBe(200);
+      expect(authResponse.status).to.equal(200);
       authToken = authResponse.body.token;
 
       // 2. Cadastrar fingerprint inicialmente como false
@@ -63,8 +64,8 @@ describe('Testes de Integração - Fluxo Completo da API', () => {
           compartilhou_fingerprint: false
         });
 
-      expect(cadastroInicial.status).toBe(201);
-      expect(cadastroInicial.body.data.compartilhou_fingerprint).toBe(false);
+      expect(cadastroInicial.status).to.equal(201);
+      expect(cadastroInicial.body.data.compartilhou_fingerprint).to.equal(false);
 
       // 3. Alterar para true
       const alteracao = await request(app)
@@ -75,16 +76,16 @@ describe('Testes de Integração - Fluxo Completo da API', () => {
           compartilhou_fingerprint: true
         });
 
-      expect(alteracao.status).toBe(201);
-      expect(alteracao.body.data.compartilhou_fingerprint).toBe(true);
+      expect(alteracao.status).to.equal(201);
+      expect(alteracao.body.data.compartilhou_fingerprint).to.equal(true);
 
       // 4. Verificar se foi alterado
       const consulta = await request(app)
         .get('/biometria/fingerprint/def456')
         .set('Authorization', `Bearer ${authToken}`);
 
-      expect(consulta.status).toBe(200);
-      expect(consulta.body.data.compartilhou_fingerprint).toBe(true);
+      expect(consulta.status).to.equal(200);
+      expect(consulta.body.data.compartilhou_fingerprint).to.equal(true);
     });
   });
 
@@ -98,7 +99,7 @@ describe('Testes de Integração - Fluxo Completo da API', () => {
           senha: 'minhaSenhaSegura'
         });
 
-      expect(authResponse.status).toBe(200);
+      expect(authResponse.status).to.equal(200);
       authToken = authResponse.body.token;
 
       // 2. Tentar acessar dados do usuário def456
@@ -106,8 +107,8 @@ describe('Testes de Integração - Fluxo Completo da API', () => {
         .get('/biometria/fingerprint/def456')
         .set('Authorization', `Bearer ${authToken}`);
 
-      expect(acessoNegado.status).toBe(403);
-      expect(acessoNegado.body.error).toBe('Acesso negado');
+      expect(acessoNegado.status).to.equal(403);
+      expect(acessoNegado.body.error).to.equal('Acesso negado');
     });
 
     it('deve rejeitar token expirado ou inválido', async () => {
@@ -117,8 +118,8 @@ describe('Testes de Integração - Fluxo Completo da API', () => {
         .get('/biometria/fingerprint/abc123')
         .set('Authorization', `Bearer ${tokenInvalido}`);
 
-      expect(response.status).toBe(401);
-      expect(response.body.error).toBe('Token inválido');
+      expect(response.status).to.equal(401);
+      expect(response.body.error).to.equal('Token inválido');
     });
   });
 
@@ -132,7 +133,7 @@ describe('Testes de Integração - Fluxo Completo da API', () => {
           senha: 'senhaTeste456'
         });
 
-      expect(authResponse.status).toBe(200);
+      expect(authResponse.status).to.equal(200);
       authToken = authResponse.body.token;
 
       // 2. Tentar cadastrar com dados inválidos
@@ -144,8 +145,8 @@ describe('Testes de Integração - Fluxo Completo da API', () => {
           compartilhou_fingerprint: 'sim' // Deveria ser boolean
         });
 
-      expect(dadosInvalidos.status).toBe(400);
-      expect(dadosInvalidos.body.error).toBe('Dados inválidos');
+      expect(dadosInvalidos.status).to.equal(400);
+      expect(dadosInvalidos.body.error).to.equal('Dados inválidos');
     });
 
     it('deve retornar erro 404 para usuário inexistente', async () => {
@@ -157,7 +158,7 @@ describe('Testes de Integração - Fluxo Completo da API', () => {
           senha: 'minhaSenhaSegura'
         });
 
-      expect(authResponse.status).toBe(200);
+      expect(authResponse.status).to.equal(200);
       authToken = authResponse.body.token;
 
       // 2. Limpar dados de biometria para garantir que o usuário não tenha fingerprint
@@ -169,8 +170,8 @@ describe('Testes de Integração - Fluxo Completo da API', () => {
         .get('/biometria/fingerprint/abc123')
         .set('Authorization', `Bearer ${authToken}`);
 
-      expect(usuarioInexistente.status).toBe(404);
-      expect(usuarioInexistente.body.error).toBe('Usuário não encontrado');
+      expect(usuarioInexistente.status).to.equal(404);
+      expect(usuarioInexistente.body.error).to.equal('Usuário não encontrado');
     });
   });
 
@@ -179,10 +180,10 @@ describe('Testes de Integração - Fluxo Completo da API', () => {
       const response = await request(app)
         .get('/health');
 
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('status');
-      expect(response.body).toHaveProperty('message');
-      expect(response.body.status).toBe('OK');
+      expect(response.status).to.equal(200);
+      expect(response.body).to.have.property('status');
+      expect(response.body).to.have.property('message');
+      expect(response.body.status).to.equal('OK');
     });
 
     it('deve disponibilizar documentação Swagger', async () => {
@@ -190,7 +191,7 @@ describe('Testes de Integração - Fluxo Completo da API', () => {
         .get('/api-docs');
 
       // Swagger pode retornar 301 (redirecionamento) ou 200
-      expect([200, 301]).toContain(response.status);
+      expect([200, 301]).to.contain(response.status);
       if (response.status === 200) {
         expect(response.headers['content-type']).toContain('text/html');
       }

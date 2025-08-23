@@ -147,19 +147,29 @@ npm test
 
 ### Executar testes com coverage
 ```bash
-npm test -- --coverage
+npm run test:coverage
 ```
 
 ### Executar testes específicos
 ```bash
 # Testes de autenticação
-npm test -- tests/auth.test.js
+npm run test:simple -- tests/auth.test.js
 
 # Testes de biometria
-npm test -- tests/biometria.test.js
+npm run test:simple -- tests/biometria.test.js
 
 # Testes de integração
-npm test -- tests/integration.test.js
+npm run test:simple -- tests/integration.test.js
+```
+
+### Executar testes em modo watch
+```bash
+npm run test:watch
+```
+
+### Gerar relatório completo
+```bash
+npm run test:full
 ```
 
 ## 🔐 Usuários de Exemplo

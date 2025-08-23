@@ -1,10 +1,11 @@
 const request = require('supertest');
+const { expect } = require('chai');
 const app = require('../server');
 
 describe('Rotas de Biometria', () => {
   let authToken;
 
-  beforeAll(async () => {
+  before(async () => {
     // Obter token de autenticação para os testes
     const response = await request(app)
       .post('/auth/token')
@@ -26,14 +27,14 @@ describe('Rotas de Biometria', () => {
           compartilhou_fingerprint: true
         });
 
-      expect(response.status).toBe(201);
-      expect(response.body).toHaveProperty('message');
-      expect(response.body).toHaveProperty('data');
-      expect(response.body.data).toHaveProperty('user_id');
-      expect(response.body.data).toHaveProperty('compartilhou_fingerprint');
-      expect(response.body.data).toHaveProperty('data_cadastro');
-      expect(response.body.data.user_id).toBe('abc123');
-      expect(response.body.data.compartilhou_fingerprint).toBe(true);
+      expect(response.status).to.equal(201);
+      expect(response.body).to.have.property('message');
+      expect(response.body).to.have.property('data');
+      expect(response.body.data).to.have.property('user_id');
+      expect(response.body.data).to.have.property('compartilhou_fingerprint');
+      expect(response.body.data).to.have.property('data_cadastro');
+      expect(response.body.data.user_id).to.equal('abc123');
+      expect(response.body.data.compartilhou_fingerprint).to.equal(true);
     });
 
     it('deve retornar erro 401 quando token não for fornecido', async () => {
@@ -44,9 +45,9 @@ describe('Rotas de Biometria', () => {
           compartilhou_fingerprint: true
         });
 
-      expect(response.status).toBe(401);
-      expect(response.body).toHaveProperty('error');
-      expect(response.body).toHaveProperty('message');
+      expect(response.status).to.equal(401);
+      expect(response.body).to.have.property('error');
+      expect(response.body).to.have.property('message');
     });
 
     it('deve retornar erro 401 quando token for inválido', async () => {
@@ -58,9 +59,9 @@ describe('Rotas de Biometria', () => {
           compartilhou_fingerprint: true
         });
 
-      expect(response.status).toBe(401);
-      expect(response.body).toHaveProperty('error');
-      expect(response.body).toHaveProperty('message');
+      expect(response.status).to.equal(401);
+      expect(response.body).to.have.property('error');
+      expect(response.body).to.have.property('message');
     });
 
     it('deve retornar erro 400 quando user_id não for fornecido', async () => {
@@ -71,10 +72,10 @@ describe('Rotas de Biometria', () => {
           compartilhou_fingerprint: true
         });
 
-      expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error');
-      expect(response.body).toHaveProperty('message');
-      expect(response.body.error).toBe('Dados inválidos');
+      expect(response.status).to.equal(400);
+      expect(response.body).to.have.property('error');
+      expect(response.body).to.have.property('message');
+      expect(response.body.error).to.equal('Dados inválidos');
     });
 
     it('deve retornar erro 400 quando compartilhou_fingerprint não for fornecido', async () => {
@@ -85,10 +86,10 @@ describe('Rotas de Biometria', () => {
           user_id: 'abc123'
         });
 
-      expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error');
-      expect(response.body).toHaveProperty('message');
-      expect(response.body.error).toBe('Dados inválidos');
+      expect(response.status).to.equal(400);
+      expect(response.body).to.have.property('error');
+      expect(response.body).to.have.property('message');
+      expect(response.body.error).to.equal('Dados inválidos');
     });
 
     it('deve retornar erro 400 quando user_id for vazio', async () => {
@@ -100,10 +101,10 @@ describe('Rotas de Biometria', () => {
           compartilhou_fingerprint: true
         });
 
-      expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error');
-      expect(response.body).toHaveProperty('message');
-      expect(response.body.error).toBe('Dados inválidos');
+      expect(response.status).to.equal(400);
+      expect(response.body).to.have.property('error');
+      expect(response.body).to.have.property('message');
+      expect(response.body.error).to.equal('Dados inválidos');
     });
 
     it('deve retornar erro 400 quando compartilhou_fingerprint não for booleano', async () => {
@@ -115,10 +116,10 @@ describe('Rotas de Biometria', () => {
           compartilhou_fingerprint: 'true'
         });
 
-      expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error');
-      expect(response.body).toHaveProperty('message');
-      expect(response.body.error).toBe('Dados inválidos');
+      expect(response.status).to.equal(400);
+      expect(response.body).to.have.property('error');
+      expect(response.body).to.have.property('message');
+      expect(response.body.error).to.equal('Dados inválidos');
     });
 
     it('deve retornar erro 403 quando user_id do token não corresponder ao user_id da requisição', async () => {
@@ -130,10 +131,10 @@ describe('Rotas de Biometria', () => {
           compartilhou_fingerprint: true
         });
 
-      expect(response.status).toBe(403);
-      expect(response.body).toHaveProperty('error');
-      expect(response.body).toHaveProperty('message');
-      expect(response.body.error).toBe('Acesso negado');
+      expect(response.status).to.equal(403);
+      expect(response.body).to.have.property('error');
+      expect(response.body).to.have.property('message');
+      expect(response.body.error).to.equal('Acesso negado');
     });
   });
 
@@ -158,21 +159,21 @@ describe('Rotas de Biometria', () => {
         .get('/biometria/fingerprint/abc123')
         .set('Authorization', `Bearer ${authToken}`);
 
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('message');
-      expect(response.body).toHaveProperty('data');
-      expect(response.body.data).toHaveProperty('user_id');
-      expect(response.body.data).toHaveProperty('compartilhou_fingerprint');
-      expect(response.body.data).toHaveProperty('data_cadastro');
+      expect(response.status).to.equal(200);
+      expect(response.body).to.have.property('message');
+      expect(response.body).to.have.property('data');
+      expect(response.body.data).to.have.property('user_id');
+      expect(response.body.data).to.have.property('compartilhou_fingerprint');
+      expect(response.body.data).to.have.property('data_cadastro');
     });
 
     it('deve retornar erro 401 quando token não for fornecido', async () => {
       const response = await request(app)
         .get('/biometria/fingerprint/abc123');
 
-      expect(response.status).toBe(401);
-      expect(response.body).toHaveProperty('error');
-      expect(response.body).toHaveProperty('message');
+      expect(response.status).to.equal(401);
+      expect(response.body).to.have.property('error');
+      expect(response.body).to.have.property('message');
     });
 
     it('deve retornar erro 401 quando token for inválido', async () => {
@@ -180,9 +181,9 @@ describe('Rotas de Biometria', () => {
         .get('/biometria/fingerprint/abc123')
         .set('Authorization', 'Bearer token_invalido');
 
-      expect(response.status).toBe(401);
-      expect(response.body).toHaveProperty('error');
-      expect(response.body).toHaveProperty('message');
+      expect(response.status).to.equal(401);
+      expect(response.body).to.have.property('error');
+      expect(response.body).to.have.property('message');
     });
 
     it('deve retornar erro 403 quando user_id do token não corresponder ao user_id da consulta', async () => {
@@ -190,10 +191,10 @@ describe('Rotas de Biometria', () => {
         .get('/biometria/fingerprint/def456')
         .set('Authorization', `Bearer ${authToken}`);
 
-      expect(response.status).toBe(403);
-      expect(response.body).toHaveProperty('error');
-      expect(response.body).toHaveProperty('message');
-      expect(response.body.error).toBe('Acesso negado');
+      expect(response.status).to.equal(403);
+      expect(response.body).to.have.property('error');
+      expect(response.body).to.have.property('message');
+      expect(response.body.error).to.equal('Acesso negado');
     });
 
     it('deve retornar erro 404 quando usuário não tiver fingerprint cadastrado', async () => {
@@ -201,10 +202,10 @@ describe('Rotas de Biometria', () => {
         .get('/biometria/fingerprint/abc123')
         .set('Authorization', `Bearer ${authToken}`);
 
-      expect(response.status).toBe(404);
-      expect(response.body).toHaveProperty('error');
-      expect(response.body).toHaveProperty('message');
-      expect(response.body.error).toBe('Usuário não encontrado');
+      expect(response.status).to.equal(404);
+      expect(response.body).to.have.property('error');
+      expect(response.body).to.have.property('message');
+      expect(response.body.error).to.equal('Usuário não encontrado');
     });
   });
 }); 

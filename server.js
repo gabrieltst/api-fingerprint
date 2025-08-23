@@ -97,7 +97,7 @@ app.use('*', (req, res) => {
 });
 
 // Só inicia o servidor se não estiver em modo de teste
-if (process.env.NODE_ENV !== 'test') {
+if (process.env.NODE_ENV !== 'test' && !process.argv.includes('--test')) {
   app.listen(PORT, () => {
     console.log(`🚀 Servidor rodando na porta ${PORT}`);
     console.log(`📚 Documentação disponível em: http://localhost:${PORT}/api-docs`);

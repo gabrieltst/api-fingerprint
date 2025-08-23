@@ -1,4 +1,5 @@
 const request = require('supertest');
+const { expect } = require('chai');
 const app = require('../server');
 
 describe('Rotas de Autenticação', () => {
@@ -11,10 +12,10 @@ describe('Rotas de Autenticação', () => {
           senha: 'minhaSenhaSegura'
         });
 
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('token');
-      expect(response.body).toHaveProperty('message');
-      expect(response.body.message).toBe('Token gerado com sucesso');
+      expect(response.status).to.equal(200);
+      expect(response.body).to.have.property('token');
+      expect(response.body).to.have.property('message');
+      expect(response.body.message).to.equal('Token gerado com sucesso');
     });
 
     it('deve retornar erro 400 quando user_id não for fornecido', async () => {
@@ -24,10 +25,10 @@ describe('Rotas de Autenticação', () => {
           senha: 'minhaSenhaSegura'
         });
 
-      expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error');
-      expect(response.body).toHaveProperty('message');
-      expect(response.body.error).toBe('Dados inválidos');
+      expect(response.status).to.equal(400);
+      expect(response.body).to.have.property('error');
+      expect(response.body).to.have.property('message');
+      expect(response.body.error).to.equal('Dados inválidos');
     });
 
     it('deve retornar erro 400 quando senha não for fornecida', async () => {
@@ -37,10 +38,10 @@ describe('Rotas de Autenticação', () => {
           user_id: 'abc123'
         });
 
-      expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error');
-      expect(response.body).toHaveProperty('message');
-      expect(response.body.error).toBe('Dados inválidos');
+      expect(response.status).to.equal(400);
+      expect(response.body).to.have.property('error');
+      expect(response.body).to.have.property('message');
+      expect(response.body.error).to.equal('Dados inválidos');
     });
 
     it('deve retornar erro 400 quando user_id for vazio', async () => {
@@ -51,10 +52,10 @@ describe('Rotas de Autenticação', () => {
           senha: 'minhaSenhaSegura'
         });
 
-      expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error');
-      expect(response.body).toHaveProperty('message');
-      expect(response.body.error).toBe('Dados inválidos');
+      expect(response.status).to.equal(400);
+      expect(response.body).to.have.property('error');
+      expect(response.body).to.have.property('message');
+      expect(response.body.error).to.equal('Dados inválidos');
     });
 
     it('deve retornar erro 400 quando senha for vazia', async () => {
@@ -65,10 +66,10 @@ describe('Rotas de Autenticação', () => {
           senha: ''
         });
 
-      expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error');
-      expect(response.body).toHaveProperty('message');
-      expect(response.body.error).toBe('Dados inválidos');
+      expect(response.status).to.equal(400);
+      expect(response.body).to.have.property('error');
+      expect(response.body).to.have.property('message');
+      expect(response.body.error).to.equal('Dados inválidos');
     });
 
     it('deve retornar erro 401 com credenciais inválidas', async () => {
@@ -79,10 +80,10 @@ describe('Rotas de Autenticação', () => {
           senha: 'senhaIncorreta'
         });
 
-      expect(response.status).toBe(401);
-      expect(response.body).toHaveProperty('error');
-      expect(response.body).toHaveProperty('message');
-      expect(response.body.error).toBe('Credenciais inválidas');
+      expect(response.status).to.equal(401);
+      expect(response.body).to.have.property('error');
+      expect(response.body).to.have.property('message');
+      expect(response.body.error).to.equal('Credenciais inválidas');
     });
 
     it('deve retornar erro 401 com usuário inexistente', async () => {
@@ -93,10 +94,10 @@ describe('Rotas de Autenticação', () => {
           senha: 'qualquerSenha'
         });
 
-      expect(response.status).toBe(401);
-      expect(response.body).toHaveProperty('error');
-      expect(response.body).toHaveProperty('message');
-      expect(response.body.error).toBe('Credenciais inválidas');
+      expect(response.status).to.equal(401);
+      expect(response.body).to.have.property('error');
+      expect(response.body).to.have.property('message');
+      expect(response.body.error).to.equal('Credenciais inválidas');
     });
   });
 }); 
